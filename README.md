@@ -71,7 +71,7 @@ sudo  docker run \
 
 #### 4. Install  `libnvinfer_plugin` with YoloNMS
 ```bash
-cd TensorRTPlugins
+cd TensorRTPlugin
 ./patch_libnvinfer.sh
 cd ..
 ```
