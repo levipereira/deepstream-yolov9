@@ -61,7 +61,7 @@ def export_onnx_trt(model, im, file, class_agnostic, topk_all, iou_thres, conf_t
         is_det_model=False
 
     ## force SegmentationModel  
-    env_is_det_model = os.getenv("is_det_model")
+    env_is_det_model = os.getenv("MODEL_DET")
     if env_is_det_model == "0":
         is_det_model = False
     # YOLO ONNX export

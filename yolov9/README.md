@@ -84,7 +84,7 @@ python3 export_onnxtrt.py --weights runs/models/yolov9-c-seg-converted.pt
 ```
 
 **Note**: Only `yolov9-c-seg-converted.pt` has an issue after reparametrization. It was configured as a DetectionModel instead of a SegmentationModel, `gelan-c-seg.pt` does not have this issue. <br>
-To workaround this, you can force the export to recognize it as a segmentation model by using the environment variable `is_det_model=0`.
+To workaround this, you can force the export to recognize it as a segmentation model by using the environment variable `MODEL_DET=0`.
 
 If you don't use the environment variable, you'll encounter the following error:
 ```bash
@@ -93,13 +93,13 @@ ONNX TRT: export failure ❌ 0.9s: 'tuple' object has no attribute 'permute'
 
 To workaround this issue, use the following command:
 ```bash
-is_det_model=0 python3 export_onnxtrt.py --weights runs/models/yolov9-c-seg-converted.pt
+MODEL_DET=0 python3 export_onnxtrt.py --weights runs/models/yolov9-c-seg-converted.pt
 ```
 
 #### 4. Copy ONNX Models
 exit from docker to host.
 
-Copy the generated ONNX model file and labels.txt file (if generated) to the `deepstream-yolov9` folder.
+Copy the generated ONNX model file to the `deepstream-yolov9/models` dir.
 ```bash
 cp yolov9/run/models/*.onnx deepstream-yolov9/models/
 ```
