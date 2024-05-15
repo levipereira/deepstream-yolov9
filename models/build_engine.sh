@@ -3,6 +3,7 @@
 # Default values
 batch_size=1
 network_size=640
+precision=fp32
 
 # Parse command line options
 while getopts ":b:n:" opt; do
@@ -13,8 +14,11 @@ while getopts ":b:n:" opt; do
     n )
       network_size=$OPTARG
       ;;
+    p )
+      precision=$OPTARG
+      ;;
     \? )
-      echo "Use: $0 [-b batch_size] [-n network_size]"
+      echo "Use: $0 [-b batch_size] [-n network_size] [-p precision]"
       exit 1
       ;;
   esac
@@ -27,7 +31,7 @@ find . -maxdepth 1 -type f -name '*.onnx' | while read -r file; do
     filename=$(basename "$file" .onnx)
     trtexec \
     --onnx=${filename}.onnx \
-    --fp16 \
+    --${precision} \
     --saveEngine=${filename}.engine \
     --timingCacheFile=${filename}.engine.timing.cache \
     --warmUp=500 \

@@ -15,7 +15,7 @@ This repo support Object Detection and Instance Segmentation
 [![YOLOv9 Segmentation](https://img.youtube.com/vi/v6OTjOFLNLA/0.jpg)](https://www.youtube.com/watch?v=v6OTjOFLNLA)
 
 
-## Project Workflow Overview
+# Project Workflow 
 
 This project involves several important steps as outlined below:
 
@@ -84,29 +84,12 @@ cd TensorRTPlugin
 cd ..
 ```
 
-### 5. Build TRT Engine Files with trtexec 
-Make sure that you've copied the ONNX models to the `models` directory in step 1. 
-
->Important: This step can take long time around ~15min per Model.
-
->Note: The model was exported with Dynamic Batch and Size, you can change it.
-
-Optional flags: 
-* `-b` -- batch_size (default is 1)
-* `-n` -- network_size (default is 640)
-
-```bash
-cd models
-./build_engine.sh 
-cd ..
-```
-
-### 6.  Compile DeepStream Parse Functions
+### 5.  Compile DeepStream Parse Functions
 ```bash
 CUDA_VER=12.2 make -C nvdsinfer_yolo
 ```
 
-### 7. Run Application
+### 6. Run Application
 ```bash
 ## Detection
 deepstream-app -c deepstream_yolov9_det.txt
@@ -116,6 +99,48 @@ deepstream-app -c deepstream_yolov9_mask.txt
 ```
 
 
+# Optional
+
+## Dynamic Shapes Batch Size Support
+This implementation supports dynamic shapes and dynamic batch sizes. To modify these settings, change the following configurations:
+ 
+[config_pgie_yolo9_det.txt](config_pgie_yolo9_det.txt)
+[config_pgie_yolov9_mask.txt](config_pgie_yolov9_mask.txt)
+```
+batch-size=1
+infer-dims=3;640;640
+```
+
+
+
+## Build TRT Engine Files with trtexec  
+**This also can be used to Perfomance Tests**
+
+This will avoid to create TRT Engine File on each execution.
+
+>Important: This step can take long time around ~15min per Model.
+>Note: The model was exported with Dynamic Batch and Size, you can change it.
+
+Optional flags: 
+* `-b` -- batch_size (default is 1)
+* `-n` -- network_size (default is 640)
+* `-p` -- precision fp32/fp16/int8 (default fp32)
+```bash
+
+cd models
+./build_engine.sh 
+cd ..
+```
+Change in config_pgie files accordingly  [config_pgie_yolo9_det.txt](config_pgie_yolo9_det.txt) 
+[config_pgie_yolov9_mask.txt](config_pgie_yolov9_mask.txt)
+
+```plaintext
+batch-size=1
+infer-dims=3;640;640
+# 0: FP32 1: INT8 2: FP16
+network-mode=0
+```
+ 
 
 
 
