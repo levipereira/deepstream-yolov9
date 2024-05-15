@@ -104,8 +104,8 @@ deepstream-app -c deepstream_yolov9_mask.txt
 ## Dynamic Shapes Batch Size Support
 This implementation supports dynamic shapes and dynamic batch sizes. To modify these settings, change the following configurations:
  
-[config_pgie_yolo9_det.txt](config_pgie_yolo9_det.txt)
-[config_pgie_yolov9_mask.txt](config_pgie_yolov9_mask.txt)
+[config_pgie_yolo9_det.txt](https://github.com/levipereira/deepstream-yolov9/blob/master/config_pgie_yolov9_det.txt#L8-L9) <br>
+[config_pgie_yolov9_mask.txt]([config_pgie_yolov9_mask.txt](https://github.com/levipereira/deepstream-yolov9/blob/master/config_pgie_yolov9_mask.txt#L8-L10))
 ```
 batch-size=1
 infer-dims=3;640;640
@@ -131,9 +131,9 @@ cd models
 ./build_engine.sh 
 cd ..
 ```
-Change in config_pgie files accordingly  [config_pgie_yolo9_det.txt](config_pgie_yolo9_det.txt) 
-[config_pgie_yolov9_mask.txt](config_pgie_yolov9_mask.txt)
-
+Change in config_pgie files accordingly <br>
+[config_pgie_yolo9_det.txt](https://github.com/levipereira/deepstream-yolov9/blob/master/config_pgie_yolov9_det.txt#L8-L9) <br>
+[config_pgie_yolov9_mask.txt]([config_pgie_yolov9_mask.txt](https://github.com/levipereira/deepstream-yolov9/blob/master/config_pgie_yolov9_mask.txt#L8-L10))
 ```plaintext
 batch-size=1
 infer-dims=3;640;640
