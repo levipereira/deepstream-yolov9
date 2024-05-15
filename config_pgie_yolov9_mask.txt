@@ -9,7 +9,7 @@ batch-size=1
 force-implicit-batch-dim=0
 infer-dims=3;640;640
 # 0: FP32 1: INT8 2: FP16
-network-mode=0
+network-mode=2
 num-detected-classes=80
 interval=0
 gie-unique-id=1

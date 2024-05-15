@@ -90,6 +90,7 @@ CUDA_VER=12.2 make -C nvdsinfer_yolo
 ```
 
 ### 6. Run Application
+>**The first run may take up to 15 minutes due to the building Engine File with FP16 precision.**
 ```bash
 ## Detection
 deepstream-app -c deepstream_yolov9_det.txt
