@@ -15,7 +15,7 @@ This project involves several important steps as outlined below:
 ```bash
 git clone https://github.com/levipereira/deepstream-yolov9.git
 cd deepstream-yolov9
-git submodule init
+git submodule update --init --recursive
 ```
 
 
@@ -95,7 +95,7 @@ cd ..
 
 ### 6.  Compile DeepStream Parse Functions
 ```bash
-CUDA_VER=12.2 make -C nvdsinfer_yolo_nms
+CUDA_VER=12.2 make -C nvdsinfer_yolo
 ```
 
 ### 7. Run Application
