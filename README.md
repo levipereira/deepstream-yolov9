@@ -2,6 +2,7 @@
 
 This project was developed using DeepStream SDK 7.0.<br>[DeepStream 7.0 is now supported on Windows WSL2](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_on_WSL2.html), which greatly aids in application development.
 
+This Repo Support Object Detection and Instance Segmentation
 
 ### Video Processed with DeepStream 7.0 and YOLOv9-Segmentation
 [![YOLOv9 Segmentation](https://img.youtube.com/vi/v6OTjOFLNLA/0.jpg)](https://www.youtube.com/watch?v=v6OTjOFLNLA)
