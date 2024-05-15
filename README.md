@@ -90,7 +90,12 @@ CUDA_VER=12.2 make -C nvdsinfer_yolo
 ```
 
 ### 6. Run Application
->**The first run may take up to 15 minutes due to the building Engine File with FP16 precision.**
+>**The first run may take up to 15 minutes due to the building Engine File with FP16 precision.**<br>
+During this process, it may seem like it's stuck on the following line. Please be patient and wait for it to complete.
+```
+WARNING: [TRT]: onnx2trt_utils.cpp:374: Your ONNX model has been generated with INT64 weights, while TensorRT does not natively support INT64. Attempting to cast down to INT32.
+```
+
 ```bash
 ## Detection
 deepstream-app -c deepstream_yolov9_det.txt
