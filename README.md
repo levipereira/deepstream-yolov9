@@ -1,6 +1,13 @@
-# DeepStream 7.0 with YOLOv9 - Detection and Segmentation
+# DeepStream / YOLOv9 - Detection and Segmentation
 
 This project was developed using DeepStream SDK 7.0.<br>[DeepStream 7.0 is now supported on Windows WSL2](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_on_WSL2.html), which greatly aids in application development.
+
+
+This project combines the power of DeepStream 7, the latest and most advanced real-time video analytics platform, with the precision and efficiency of YOLOv9, the cutting-edge in object detection and instance segmentation. 
+
+With DeepStream 7, we unlock the full potential of real-time video processing, providing an unparalleled video analytics experience.
+
+YOLOv9 signifies a monumental leap forward in real-time object detection, introducing revolutionary methodologies like Programmable Gradient Information (PGI) and the Generalized Efficient Layer Aggregation Network (GELAN). This cutting-edge model showcases extraordinary enhancements in efficiency, accuracy, and adaptability, establishing unprecedented benchmarks on the MS COCO dataset.
 
 This repo support Object Detection and Instance Segmentation
 
