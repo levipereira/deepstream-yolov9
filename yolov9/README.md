@@ -103,3 +103,7 @@ Copy the generated ONNX model file to the `deepstream-yolov9/models` dir.
 ```bash
 cp yolov9/run/models/*.onnx deepstream-yolov9/models/
 ```
+
+
+## Acknowledgements
+https://github.com/hiennguyen9874/yolov7-seg
