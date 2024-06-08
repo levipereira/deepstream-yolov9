@@ -22,25 +22,25 @@ cp deepstream-yolov9/yolov9/models/experimental_trt.py yolov9/models/
 mkdir yolov9/runs
 docker run --gpus all  \
  -it \
- --rm
+ --rm \
  --name yolov9-onnx-trt \
  --net host  \
  --ipc=host \
  -v $(pwd)/yolov9:/yolov9 \
  -v $(pwd)/runs:/yolov9/runs \
- -w /yolov9
+ -w /yolov9 \
  nvcr.io/nvidia/pytorch:23.02-py3
 
 ## Install Pre-Reqs 
 apt-get update 
 apt-get install -y zip htop screen libgl1-mesa-glx libfreetype6-dev
 
-pip install seaborn \
-                thop \
-                markdown-it-py==2.2.0 \
-                onnx-simplifier==0.4.35 \
-                onnxsim==0.4.35 \
-                onnxruntime==1.16.3                
+pip3 install seaborn \
+thop \
+markdown-it-py==2.2.0 \
+onnx-simplifier==0.4.35 \
+onnxsim==0.4.35 \
+onnxruntime==1.16.3                
 pip install onnx_graphsurgeon --extra-index-url https://pypi.ngc.nvidia.com 
 pip install pillow==9.5.0 --no-cache-dir --force-reinstall
 ```
@@ -49,9 +49,9 @@ pip install pillow==9.5.0 --no-cache-dir --force-reinstall
 **skip this step if you are using custom models**
 
 ```bash
-cd \yolov9
-mkdir -p \yolov9\runs\models
-cd \yolov9\runs\models
+cd /yolov9
+mkdir -p /yolov9/runs/models
+cd /yolov9/runs/models
 wget https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-seg-converted.pt
 wget https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt
 

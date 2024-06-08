@@ -11,5 +11,7 @@ CTestTestfile.cmake
 _deps
 *.pt
 *.onnx
-*.engine
+*engine*
 libnvinfer*
+
+TensorRTPlugin/TensorRT

@@ -75,7 +75,7 @@ def export_onnx_trt(model, im, file, class_agnostic, topk_all, iou_thres, conf_t
         'names': model.names,
         'model type' : 'Detection' if is_det_model else 'Segmentation',
         'TRT Compatibility': '8.6 or above',
-        'TRT Plugins': 'YoloNMS' if is_det_model else 'YoloNMS, ROIAlign'
+        'TRT Plugins': 'EfficientNMS_TRT' if is_det_model else 'EfficientNMSX_TRT, ROIAlign'
         }
 
     dynamic_axes = {'images': {0 : 'batch', 2: 'height', 3:'width'}, } # variable length axes
@@ -88,12 +88,10 @@ def export_onnx_trt(model, im, file, class_agnostic, topk_all, iou_thres, conf_t
                  }
 
     if is_det_model:
-        output_axes['det_indices'] = {0: 'batch'}
-        output_names = ['num_dets', 'det_boxes', 'det_scores', 'det_classes', 'det_indices'] 
+        output_names = ['num_dets', 'det_boxes', 'det_scores', 'det_classes'] 
         shapes = [ batch_size, 1,  
                 batch_size,  topk_all, 4,
                 batch_size,  topk_all,  
-                batch_size,  topk_all, 
                 batch_size,  topk_all]
         
     else:
@@ -114,7 +112,7 @@ def export_onnx_trt(model, im, file, class_agnostic, topk_all, iou_thres, conf_t
                           f, 
                           verbose=False, 
                           export_params=True,       # store the trained parameter weights inside the model file
-                          opset_version=14, 
+                          opset_version=16, 
                           do_constant_folding=True, # whether to execute constant folding for optimization
                           input_names=['images'],
                           output_names=output_names,

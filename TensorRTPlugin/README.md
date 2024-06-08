@@ -3,7 +3,7 @@
 TensorRT OSS build is required. This is required because TensorRT YoloNMS plugin that are required by models  and not in the general TensorRT release. 
 
 ## New plugin
-- [YOLO_NMS_TRT](https://github.com/levipereira/TensorRT/tree/release/8.6/plugin/yoloNMSPlugin): Same Efficient NMS, but return boxes indices
+- [TRT_EfficientNMSX](https://github.com/levipereira/TensorRT/tree/release/8.6/plugin/yoloNMSPlugin): Same Efficient NMS, but return boxes indices
 
 
 ## Downloading TensorRT Build

@@ -3,7 +3,7 @@
 # Default values
 batch_size=1
 network_size=640
-precision=fp32
+precision=fp16
 
 # Parse command line options
 while getopts ":b:n:" opt; do

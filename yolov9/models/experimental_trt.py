@@ -1,7 +1,58 @@
 import torch
 import torch.nn as nn
 
-class TRT_YOLO_NMS(torch.autograd.Function):
+class TRT_EfficientNMS(torch.autograd.Function):
+    '''TensorRT NMS operation'''
+    @staticmethod
+    def forward(
+        ctx,
+        boxes,
+        scores,
+        background_class=-1,
+        box_coding=1,
+        iou_threshold=0.45,
+        max_output_boxes=100,
+        plugin_version="1",
+        score_activation=0,
+        score_threshold=0.25,
+        class_agnostic=0,
+    ):
+
+        batch_size, num_boxes, num_classes = scores.shape
+        num_det = torch.randint(0, max_output_boxes, (batch_size, 1), dtype=torch.int32)
+        det_boxes = torch.randn(batch_size, max_output_boxes, 4)
+        det_scores = torch.randn(batch_size, max_output_boxes)
+        det_classes = torch.randint(0, num_classes, (batch_size, max_output_boxes), dtype=torch.int32)
+        return num_det, det_boxes, det_scores, det_classes
+
+    @staticmethod
+    def symbolic(g,
+                 boxes,
+                 scores,
+                 background_class=-1,
+                 box_coding=1,
+                 iou_threshold=0.45,
+                 max_output_boxes=100,
+                 plugin_version="1",
+                 score_activation=0,
+                 score_threshold=0.25,
+                 class_agnostic=0):
+        out = g.op("TRT::EfficientNMS_TRT",
+                   boxes,
+                   scores,
+                   background_class_i=background_class,
+                   box_coding_i=box_coding,
+                   iou_threshold_f=iou_threshold,
+                   max_output_boxes_i=max_output_boxes,
+                   plugin_version_s=plugin_version,
+                   score_activation_i=score_activation,
+                   class_agnostic_i=class_agnostic,
+                   score_threshold_f=score_threshold,
+                   outputs=4)
+        nums, boxes, scores, classes = out
+        return nums, boxes, scores, classes
+
+class TRT_EfficientNMSX(torch.autograd.Function):
     '''TensorRT NMS operation'''
     @staticmethod
     def forward(
@@ -38,7 +89,7 @@ class TRT_YOLO_NMS(torch.autograd.Function):
                  score_activation=0,
                  score_threshold=0.25,
                  class_agnostic=0):
-        out = g.op("TRT::YOLO_NMS_TRT",
+        out = g.op("TRT::EfficientNMSX_TRT",
                    boxes,
                    scores,
                    background_class_i=background_class,
@@ -99,7 +150,7 @@ class TRT_ROIAlign(torch.autograd.Function):
             spatial_scale_f=spatial_scale,
         )
     
-class ONNX_YOLO_TRT(nn.Module):
+class ONNX_EfficientNMS_TRT(nn.Module):
     '''onnx module with TensorRT NMS operation.'''
     def __init__(self, class_agnostic=False, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None ,device=None, n_classes=80):
         super().__init__()
@@ -128,12 +179,49 @@ class ONNX_YOLO_TRT(nn.Module):
         bboxes = bboxes.unsqueeze(2) # [n_batch, n_bboxes, 4] -> [n_batch, n_bboxes, 1, 4]
         obj_conf = x[..., 4:]
         scores = obj_conf
-        num_det, det_boxes, det_scores, det_classes, det_indices = TRT_YOLO_NMS.apply(bboxes, scores, self.background_class, self.box_coding,
+        num_det, det_boxes, det_scores, det_classes = TRT_EfficientNMS.apply(bboxes, scores, self.background_class, self.box_coding,
+                                                                    self.iou_threshold, self.max_obj,
+                                                                    self.plugin_version, self.score_activation,
+                                                                    self.score_threshold, self.class_agnostic)
+        return num_det, det_boxes, det_scores, det_classes
+
+class ONNX_EfficientNMSX_TRT(nn.Module):
+    '''onnx module with TensorRT NMS operation.'''
+    def __init__(self, class_agnostic=False, max_obj=100, iou_thres=0.45, score_thres=0.25, max_wh=None ,device=None, n_classes=80):
+        super().__init__()
+        assert max_wh is None
+        self.device = device if device else torch.device('cpu')
+        self.class_agnostic = 1 if class_agnostic else 0
+        self.background_class = -1,
+        self.box_coding = 1,
+        self.iou_threshold = iou_thres
+        self.max_obj = max_obj
+        self.plugin_version = '1'
+        self.score_activation = 0
+        self.score_threshold = score_thres
+        self.n_classes=n_classes
+        
+
+    def forward(self, x):
+        if isinstance(x, list):  
+            x = x[1]
+        x = x.permute(0, 2, 1)
+        bboxes_x = x[..., 0:1]
+        bboxes_y = x[..., 1:2]
+        bboxes_w = x[..., 2:3]
+        bboxes_h = x[..., 3:4]
+        bboxes = torch.cat([bboxes_x, bboxes_y, bboxes_w, bboxes_h], dim = -1)
+        bboxes = bboxes.unsqueeze(2) # [n_batch, n_bboxes, 4] -> [n_batch, n_bboxes, 1, 4]
+        obj_conf = x[..., 4:]
+        scores = obj_conf
+        num_det, det_boxes, det_scores, det_classes, det_indices = TRT_EfficientNMSX.apply(bboxes, scores, self.background_class, self.box_coding,
                                                                     self.iou_threshold, self.max_obj,
                                                                     self.plugin_version, self.score_activation,
                                                                     self.score_threshold, self.class_agnostic)
         return num_det, det_boxes, det_scores, det_classes, det_indices
-    
+
+ 
+
 class End2End_TRT(nn.Module):
     '''export onnx or tensorrt model with NMS operation.'''
     def __init__(self, model, class_agnostic=False, max_obj=100, iou_thres=0.45, score_thres=0.25, mask_resolution=56, pooler_scale=0.25, sampling_ratio=0, max_wh=None, device=None, n_classes=80, is_det_model=True):
@@ -143,10 +231,10 @@ class End2End_TRT(nn.Module):
         self.model = model.to(device)
         self.model.model[-1].end2end = True
         if is_det_model:
-            self.patch_model = ONNX_YOLO_TRT 
+            self.patch_model = ONNX_EfficientNMS_TRT 
             self.end2end = self.patch_model(class_agnostic, max_obj, iou_thres, score_thres, max_wh, device, n_classes)
         else:
-            self.patch_model = ONNX_YOLO_MASK_TRT 
+            self.patch_model = ONNX_End2End_MASK_TRT 
             self.end2end = self.patch_model(class_agnostic, max_obj, iou_thres, score_thres, mask_resolution, pooler_scale, sampling_ratio, max_wh, device, n_classes) 
         self.end2end.eval()
 
@@ -156,7 +244,7 @@ class End2End_TRT(nn.Module):
         return x
     
 
-class ONNX_YOLO_MASK_TRT(nn.Module):
+class ONNX_End2End_MASK_TRT(nn.Module):
     """onnx module with ONNX-TensorRT NMS/ROIAlign operation."""
     def __init__(
         self,
@@ -206,7 +294,7 @@ class ONNX_YOLO_MASK_TRT(nn.Module):
         batch_size, nm, proto_h, proto_w = proto.shape
         total_object = batch_size * self.max_obj
         masks = det[..., 4 + self.n_classes : 4 + self.n_classes + nm]
-        num_det, det_boxes, det_scores, det_classes, det_indices = TRT_YOLO_NMS.apply(bboxes, scores, self.background_class, self.box_coding,
+        num_det, det_boxes, det_scores, det_classes, det_indices = TRT_EfficientNMSX.apply(bboxes, scores, self.background_class, self.box_coding,
                                                                     self.iou_threshold, self.max_obj,
                                                                     self.plugin_version, self.score_activation,
                                                                     self.score_threshold,self.class_agnostic)
