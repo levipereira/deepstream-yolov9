@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Array of file URLs to download
-#"https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/gelan-c-det-trt.onnx"
-#"https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/gelan-c-seg-trt.onnx"
-
 urls=(
     "https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/yolov9-c-converted-trt.onnx"
+    "https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/yolov9-t-converted-trt.onnx"
+    "https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/yolov9-s-converted-trt.onnx"
+    "https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/yolov9-m-converted-trt.onnx"
     "https://github.com/levipereira/deepstream-yolov9/releases/download/v1.0/yolov9-c-seg-converted-trt.onnx"
 )
 
@@ -14,7 +14,10 @@ destination="./"
 
 # Download files
 for url in "${urls[@]}"; do
-    wget -P "$destination" "$url"
+    filename=$(basename "$url")
+    echo -e "\n\nDownloading: $filename..."
+    curl -L --retry 3 --retry-delay 5 -A "Mozilla/5.0" -o "${destination}${filename}" "$url"
+    echo -e "Download Complete: $filename.\n"
 done
 
-echo "Downloads complete."
+echo "All downloads complete."
