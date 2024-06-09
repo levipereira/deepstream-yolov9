@@ -32,18 +32,34 @@ git submodule update --init --recursive
 Choose one option:
 
 1. Download Models
-YOLOv9-C Detection/Segmentation models pre-trained on the COCO Dataset are available in this repository, exported in ONNX format.
+    YOLOv9-C Detection/Segmentation models pre-trained on the COCO Dataset are available in this repository, exported in ONNX format.
 
-```bash
-cd models
-./download_models.sh
-cd ..
-```
+    ```bash
+    cd models
+    ./download_models.sh
+    cd ..
+    ```
+    ## Models Download 
+
+    ### Detection
+    | Model | Test Size | AP<sup>val</sup> | AP<sub>50</sub><sup>val</sup> | AP<sub>75</sub><sup>val</sup> | Param. | FLOPs |
+    | :-- | :-: | :-: | :-: | :-: | :-: | :-: |
+    | [**YOLOv9-T**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-t-converted.pt) | 640 | **38.3%** | **53.1%** | **41.3%** | **2.0M** | **7.7G** |
+    | [**YOLOv9-S**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-s-converted.pt) | 640 | **46.8%** | **63.4%** | **50.7%** | **7.1M** | **26.4G** |
+    | [**YOLOv9-M**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-m-converted.pt) | 640 | **51.4%** | **68.1%** | **56.1%** | **20.0M** | **76.3G** |
+    | [**YOLOv9-C**](https://github.com/WongKinYiu/yolov9/releases/download/v0.1/yolov9-c-converted.pt) | 640 | **53.0%** | **70.2%** | **57.8%** | **25.3M** | **102.1G** |
+
+    ### Instance Segmentation
+    | Model | Test Size | Param. | FLOPs | AP<sup>box</sup> | AP<sup>mask</sup>  |
+    | :-- | :-: | :-: | :-: | :-: | :-: |
+    | [**YOLOv9-C-SEG**]() | 640 | 27.4M | 145.5G | **53.3%** | **43.5%** |
+ 
 
 2. You can [export your own custom YOLOv9 models](yolov9) to ONNX<br>
 
-#### 2. Download or Build TensorRT lib `libnvinfer_plugin.so.8.6.1` with  custom TensorRT YoloNMS plugin.
-The YoloNMS plugin is customized, being a modified version of the EfficientNMS plugin, with the addition of a layer called det_indices. The YoloNMS plugin needs to be compiled, or you can use a precompiled version provided, which should be installed.
+#### 2. Required Only for Instance Segmentation Models. 
+ Download or Build TensorRT lib `libnvinfer_plugin.so.8.6.1` with  custom TensorRT EfficientNMSX plugin.
+The EfficientNMSX plugin is customized, being a modified version of the EfficientNMS plugin, with the addition of a layer called det_indices. The EfficientNMSX plugin needs to be compiled, or you can use a precompiled version provided, which should be installed.
 
 Choose one option:
 1. Download  
