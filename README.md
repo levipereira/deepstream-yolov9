@@ -93,7 +93,7 @@ sudo  docker run \
         nvcr.io/nvidia/deepstream:7.0-triton-multiarch
 ```
 
-#### 4. Install  `libnvinfer_plugin` with plugin TRT_EfficientNMSX
+#### 4. Install  `libnvinfer_plugin` with plugin TRT_EfficientNMSX (Required Only for Instance Segmentation Models)
 ```bash
 cd TensorRTPlugin
 ./patch_libnvinfer.sh
