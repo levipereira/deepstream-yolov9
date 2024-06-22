@@ -1,6 +1,6 @@
 # DeepStream / YOLOv9 - Detection and Segmentation
 
-# This repo is being deprecated: Please use [https://github.com/levipereira/nvdsinfer_yolo](https://github.com/levipereira/deepstream-yolo-e2e)
+# This repo is being deprecated: Please use [https://github.com/levipereira/deepstream-yolo-e2e](https://github.com/levipereira/deepstream-yolo-e2e)
 
 This project was developed using DeepStream SDK 7.0.<br>[DeepStream 7.0 is now supported on Windows WSL2](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_on_WSL2.html), which greatly aids in application development.
 
